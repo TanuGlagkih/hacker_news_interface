@@ -3,8 +3,8 @@ import styles from './footer.module.css';
 
 export default function Footer() {
     return (
-        <footer>
-            <h3>2022</h3>
+        <footer className={styles.footer}>
+            <h3>2022, Hacker News</h3>
         </footer>
     )
 }

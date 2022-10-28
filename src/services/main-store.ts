@@ -1,6 +1,5 @@
 import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
 import { API } from '../assets/API';
-import { useAppDispatch } from './config-store';
 import { TNews } from './types';
 
 type TInitState = {
