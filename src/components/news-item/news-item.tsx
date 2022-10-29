@@ -1,8 +1,7 @@
 import * as React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import Icon from 'semantic-ui-react/dist/commonjs/elements/Icon';
 import Feed from 'semantic-ui-react/dist/commonjs/views/Feed';
-import { useAppSelector } from '../../services/config-store';
 import styles from './news-item.module.css';
 
 type TNewsProps = {
@@ -14,10 +13,7 @@ type TNewsProps = {
 };
 
 export default function NewsItem({ title, rating, author, date, id }: TNewsProps) {
-
-    const { } = useAppSelector(state => state)
-
-    var publishingDate = new Date((+date) * 1000).toUTCString();
+    const publishingDate = new Date((+date) * 1000).toLocaleString("ru-RU");
 
     return (
         <Feed.Event>

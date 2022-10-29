@@ -1,8 +1,17 @@
 .footer {
-
+    position: fixed;
     bottom: 0;
     width: 100%;
     padding: 1%;
     background-color: black;
     color: white;
+
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-start;
+    align-items: baseline;
+}
+
+.h {
+    margin: 0 30% 0 0;
 }

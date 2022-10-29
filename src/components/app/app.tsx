@@ -15,9 +15,9 @@ export default function App() {
     React.useEffect(() => {
         //@ts-ignore
         dispatch(fetchData())
+        //@ts-ignore
+        setInterval(function () { dispatch(fetchData()) }, 60000);
     }, []);
-    //@ts-ignore
-    setInterval(function () { dispatch(fetchData()) }, 60000);
 
     React.useEffect(() => {
         //@ts-ignore

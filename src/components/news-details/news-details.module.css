@@ -1,0 +1,29 @@
+.link {
+    font-size: large;
+}
+
+.link:hover {
+    text-decoration: underline;
+}
+
+.date {
+    color: gray;
+}
+
+.author {
+    font-size: medium;
+}
+
+.span {
+    font-weight: bold;
+    font-size: medium;
+}
+
+.box {
+    margin-bottom: 3%;
+}
+
+.wrapper {
+    margin: 3% 2% 35px 3%;
+    padding-bottom: 50px;
+}

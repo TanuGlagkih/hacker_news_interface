@@ -1,6 +1,6 @@
 import * as React from 'react';
 import { useAppDispatch } from '../../services/config-store';
-import { cleanStore, fetchData } from '../../services/main-store';
+import { fetchData } from '../../services/main-store';
 import styles from './header.module.css';
 import { Button, Icon } from 'semantic-ui-react'
 import { Link, useLocation } from 'react-router-dom';
