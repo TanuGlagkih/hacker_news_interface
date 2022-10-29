@@ -59,9 +59,9 @@ const mainStore = createSlice({
             state.ids = null;
         },
         cleanComments(state, action) {
-            state.comments = [];
             state.commentsKids = [];
             state.commentsNumber = 0;
+            state.comments = [];
         },
     },
     extraReducers: (builder) => {

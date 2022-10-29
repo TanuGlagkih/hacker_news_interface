@@ -4,10 +4,11 @@ import { useHistory, useLocation, useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../services/config-store';
 import { TNews } from '../../services/types';
 import { cleanComments, getComments } from '../../services/main-store';
-import { Container, Loader } from 'semantic-ui-react';
+import { Container, Icon, Loader } from 'semantic-ui-react';
 import { CommentField } from '../comment-field/comment-field';
 
 export default function NewsDetails() {
+    const [refresh, setRefresh] = React.useState(false);
     const { id } = useParams<{ id?: string }>();
     const location = useHistory();
     const { news } = useAppSelector(state => state.mainStore);
@@ -25,11 +26,11 @@ export default function NewsDetails() {
             dispatch(getComments(newId))
         } else {
             //@ts-ignore
-            dispatch(cleanComments());
-            //@ts-ignore
             item?.kids?.map(kid => dispatch(getComments(kid)))
         }
-    }, [news]);
+        //@ts-ignore
+        return () => { dispatch(cleanComments()) };
+    }, [news, refresh]);
 
     if (!item) return <Loader active inline='centered' />
 
@@ -40,6 +41,10 @@ export default function NewsDetails() {
                 <h1>{item.title}</h1>
                 <p className={styles.author}>Author: <span className={styles.span}>{item.by}</span></p>
                 <p className={styles.date}>{date}</p>
+                <div className={styles.container} onClick={() => setRefresh(() => !refresh)}>
+                    <Icon circular inverted color='teal' name='refresh' />
+                    <p className={styles.refresh}>Refresh comments</p>
+                </div>
             </Container>
             <CommentField />
         </div>
