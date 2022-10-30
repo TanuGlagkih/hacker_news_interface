@@ -8,10 +8,8 @@ import { Link, useLocation } from 'react-router-dom';
 export default function Header() {
     const dispatch = useAppDispatch();
     const location = useLocation();
-    console.log(location)
 
     const handleUpdate = () => {
-        //@ts-ignore
         dispatch(fetchData());
     };
 

@@ -30,7 +30,9 @@ export default function NewsItem({ title, rating, author, date, id }: TNewsProps
                     <Feed.Extra text className={styles.title}>{title}</Feed.Extra>
                     <Feed.Meta className={styles.meta}>
                         <Feed.Like>
-                            <Icon name='like' color='teal' />{rating}{rating == 1 ? ' like' : ' likes'}  </Feed.Like>
+                            <Icon name='like' color='teal' />
+                            <span>{rating}{rating == 1 ? ' like' : ' likes'}</span>
+                        </Feed.Like>
                     </Feed.Meta>
                 </Feed.Content>
             </Link>

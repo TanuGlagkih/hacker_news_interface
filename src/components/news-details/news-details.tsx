@@ -1,34 +1,31 @@
 import * as React from 'react';
 import styles from './news-details.module.css';
-import { useHistory, useLocation, useParams } from 'react-router-dom';
+import { useParams } from 'react-router-dom';
 import { useAppDispatch, useAppSelector } from '../../services/config-store';
 import { TNews } from '../../services/types';
-import { cleanComments, getComments } from '../../services/main-store';
+import { cleanComments, getComments, getNews } from '../../services/main-store';
 import { Container, Icon, Loader } from 'semantic-ui-react';
 import { CommentField } from '../comment-field/comment-field';
 
 export default function NewsDetails() {
     const [refresh, setRefresh] = React.useState(false);
     const { id } = useParams<{ id?: string }>();
-    const location = useHistory();
     const { news } = useAppSelector(state => state.mainStore);
     const dispatch = useAppDispatch();
-    //@ts-ignore
-    const item = news?.find((item: TNews) => item.id == `${id}`);
-    const date = new Date(item?.time * 1000).toLocaleString("ru-RU");
 
-    console.log(location)
+    const item = news?.find((item: TNews) => item.id == parseInt(`${id}`));
+
+    const date = React.useMemo(() => {
+        return new Date(item?.time * 1000).toLocaleString("ru-RU");
+    }, [item])
 
     React.useEffect(() => {
-        if (!news) {
-            const newId = parseInt(id.substring(1))
-            //@ts-ignore
-            dispatch(getComments(newId))
+        if (!news.length) {
+            const newId = parseInt(id);
+            dispatch(getComments(newId));
         } else {
-            //@ts-ignore
             item?.kids?.map(kid => dispatch(getComments(kid)))
         }
-        //@ts-ignore
         return () => { dispatch(cleanComments()) };
     }, [news, refresh]);
 

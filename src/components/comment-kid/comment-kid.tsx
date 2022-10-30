@@ -1,18 +1,23 @@
 import * as React from 'react';
-import { Comment } from 'semantic-ui-react';
+import { Comment, Icon } from 'semantic-ui-react';
 import { useAppDispatch, useAppSelector } from '../../services/config-store';
 import { getKidComments } from '../../services/main-store';
 import { TComment } from '../../services/types';
 
 const { convert } = require('html-to-text');
-
 function parseHtml(html: string) {
     return convert(html, {
         wordwrap: 130
     });
 }
 
-export function CommentBranch({ comment, parentId, firstChild }: any) {
+type TCommentProps = {
+    comment: TComment,
+    parentId: number,
+    firstChild?: boolean
+};
+
+export function CommentBranch({ comment, parentId, firstChild }: TCommentProps) {
     const dispatch = useAppDispatch();
     const { commentsKids } = useAppSelector(state => state.mainStore);
     const [showChildren, setShowChildren] = React.useState(false);
@@ -23,10 +28,9 @@ export function CommentBranch({ comment, parentId, firstChild }: any) {
 
     React.useEffect(() => {
         if (comment.kids) {
-            //@ts-ignore
             comment.kids.map((item: number) => dispatch(getKidComments(item)))
         }
-    }, []);
+    }, [commentsKids]);
 
     const handleClick = () => {
         if (firstChild) setShowChildren(!showChildren);
@@ -45,8 +49,14 @@ export function CommentBranch({ comment, parentId, firstChild }: any) {
                 <Comment.Text>{parseHtml(comment.text)}</Comment.Text>
                 <Comment.Actions>
                     <Comment.Action>Reply</Comment.Action>
+                    {comment.kids && (!showChildren ?
+                        <Icon disabled name='arrow alternate circle down outline' />
+                        :
+                        <Icon disabled name='arrow alternate circle up outline' />
+                    )}
                 </Comment.Actions>
             </Comment.Content>
+
             {showChildren && comment.kids && items?.map(comment => (
                 <Comment.Group key={comment.id}>
                     <CommentKid comment={comment} parentId={comment.id} />
@@ -56,7 +66,7 @@ export function CommentBranch({ comment, parentId, firstChild }: any) {
     )
 }
 
-function CommentKid({ comment, parentId }: any) {
+function CommentKid({ comment, parentId }: TCommentProps) {
     const dispatch = useAppDispatch();
     const { commentsKids } = useAppSelector(state => state.mainStore);
 
@@ -64,14 +74,11 @@ function CommentKid({ comment, parentId }: any) {
         return commentsKids?.filter(comment => comment.parent == parentId)
     }, [commentsKids]);
 
-    React.useEffect(() => {
+    React.useMemo(() => {
         if (comment.kids) {
-            //@ts-ignore
             comment.kids.map((item: number) => dispatch(getKidComments(item)))
         }
-    }, []);
-
-    console.log(commentsKids)
+    }, [commentsKids]);
 
     return (
         <Comment>
@@ -86,7 +93,7 @@ function CommentKid({ comment, parentId }: any) {
                     <Comment.Action>Reply</Comment.Action>
                 </Comment.Actions>
             </Comment.Content>
-            {comment.kids && items?.map(comment => (
+            {comment.kids && items.map(comment => (
                 <Comment.Group key={comment.id}>
                     <CommentBranch comment={comment} parentId={comment.id} />
                 </Comment.Group>

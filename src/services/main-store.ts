@@ -1,10 +1,10 @@
-import { createAsyncThunk, createSlice } from '@reduxjs/toolkit';
+import { createAsyncThunk, createSlice, PayloadAction } from '@reduxjs/toolkit';
 import { API } from '../assets/API';
 import { TComment, TNews } from './types';
 
 type TInitState = {
     news: Array<TNews>,
-    ids: Array<number>,
+    ids: Array<number> | null,
     comments: Array<TComment>,
     commentsKids: Array<TComment>,
     status: string | null,
@@ -54,11 +54,11 @@ const mainStore = createSlice({
     name: 'mainStore',
     initialState: initialState,
     reducers: {
-        cleanStore(state, action) {
+        cleanStore(state) {
             state.news = [];
             state.ids = null;
         },
-        cleanComments(state, action) {
+        cleanComments(state) {
             state.commentsKids = [];
             state.commentsNumber = 0;
             state.comments = [];
@@ -71,7 +71,7 @@ const mainStore = createSlice({
             builder.addCase(fetchData.rejected, (state, action) => {
                 state.status = 'rejected';
             }),
-            builder.addCase(fetchData.fulfilled, (state, action: any) => {
+            builder.addCase(fetchData.fulfilled, (state, action: PayloadAction<Array<number>>) => {
                 state.status = 'fulfilled';
                 const data = action.payload;
                 let indexInArray: number;
@@ -85,8 +85,7 @@ const mainStore = createSlice({
                         state.ids
                     ) : (
                         newItems = data.slice(0, indexInArray),
-                        //@ts-ignore
-                        state.ids.unshift(newItems),
+                        newItems.map(item => state.ids.unshift(item)),
                         state.ids.slice(0, 100)
                     )
                 )
@@ -98,7 +97,7 @@ const mainStore = createSlice({
             builder.addCase(getNews.rejected, (state, action) => {
                 state.newsStatus = 'rejected';
             }),
-            builder.addCase(getNews.fulfilled, (state, action: any) => {
+            builder.addCase(getNews.fulfilled, (state, action: PayloadAction<TNews>) => {
                 state.newsStatus = 'fulfilled';
                 state.news.push(action.payload)
             }),
@@ -109,13 +108,14 @@ const mainStore = createSlice({
             builder.addCase(getComments.rejected, (state, action) => {
                 state.commentsStatus = 'rejected';
             }),
-            builder.addCase(getComments.fulfilled, (state, action: any) => {
+            builder.addCase(getComments.fulfilled, (state, action: PayloadAction<TComment>) => {
                 state.commentsStatus = 'fulfilled';
                 (state.comments.some(kid => kid.id == action.payload.id)) ?
                     state.comments
-                    :
-                    state.comments.push(action.payload);
-                state.commentsNumber = state.comments.length + state.comments.length;
+                    : (
+                        state.comments.push(action.payload),
+                        state.commentsNumber = state.commentsKids.length + state.comments.length
+                    )
             }),
 
             builder.addCase(getKidComments.pending, (state, action) => {
@@ -124,15 +124,14 @@ const mainStore = createSlice({
             builder.addCase(getKidComments.rejected, (state, action) => {
                 state.commentsKidStatus = 'rejected';
             }),
-            builder.addCase(getKidComments.fulfilled, (state, action: any) => {
+            builder.addCase(getKidComments.fulfilled, (state, action: PayloadAction<TComment>) => {
                 state.commentsKidStatus = 'fulfilled';
 
                 (state.commentsKids.some(kid => kid.id == action.payload.id)) ?
                     state.commentsKids
-                    :
-                    state.commentsKids.push(action.payload);
-
-                state.commentsNumber = state.commentsKids.length + state.comments.length;
+                    : (
+                        state.commentsKids.push(action.payload),
+                        state.commentsNumber = state.commentsKids.length + state.comments.length);
             })
     },
 })

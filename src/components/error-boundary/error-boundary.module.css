@@ -1,0 +1,14 @@
+.header {
+    font-size: larger;
+    font-weight: bold;
+}
+
+.box {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.text {
+    font-size: large;
+}

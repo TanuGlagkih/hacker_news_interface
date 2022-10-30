@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { Comment, Header } from 'semantic-ui-react';
-import { useAppDispatch, useAppSelector } from '../../services/config-store';
-import { getKidComments } from '../../services/main-store';
+import { useAppSelector } from '../../services/config-store';
 import { CommentBranch } from '../comment-kid/comment-kid';
 
 export function CommentField() {

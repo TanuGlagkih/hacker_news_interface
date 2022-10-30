@@ -2,13 +2,13 @@ import * as React from 'react';
 import { Link, useLocation } from 'react-router-dom';
 import { Button } from 'semantic-ui-react';
 import { useAppDispatch } from '../../services/config-store';
+import { fetchData } from '../../services/main-store';
 import styles from './footer.module.css';
 
 export default function Footer() {
     const dispatch = useAppDispatch();
     const location = useLocation();
     const handleUpdate = () => {
-        //@ts-ignore
         dispatch(fetchData());
     };
 
